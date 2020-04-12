@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import '../styles/CarouselDots.scss';
 
-export default class CarouselDots extends Component {
+class CarouselDots extends Component {
   static propTypes = {
     number: PropTypes.number,
     thumbnails: PropTypes.arrayOf(PropTypes.node),
     value: PropTypes.number,
     onChange: PropTypes.func,
+    rtl: PropTypes.bool,
+    vertical: PropTypes.bool,
+    className: PropTypes.string,
   };
 
   onChange = index => () => {
@@ -27,12 +30,17 @@ export default class CarouselDots extends Component {
 
   renderCarouselDots() {
     if (this.props.thumbnails) {
-      return this.props.thumbnails.map((thumbnail, index) => (
+      const dotsLength = isNaN(this.props.number) ? this.props.thumbnails.length : this.props.number;
+
+      return this.props.thumbnails.slice(0, dotsLength).map((thumbnail, index) => (
         <li key={index}>
           <div
             className={classnames(
               'BrainhubCarousel__thumbnail',
-              { 'BrainhubCarousel__thumbnail--selected': this.calculateButtonValue() === this.props.value }
+              {
+                'BrainhubCarousel__thumbnail--selected': index === this.calculateButtonValue() % dotsLength,
+                'BrainhubCarousel__thumbnail--vertical': this.props.vertical,
+              },
             )}
             type="button"
             onClick={this.onChange(index)}
@@ -50,24 +58,27 @@ export default class CarouselDots extends Component {
           <div
             className={classnames(
               'BrainhubCarousel__dot',
-              { 'BrainhubCarousel__dot--selected': i === this.calculateButtonValue() % this.props.number }
+              { 'BrainhubCarousel__dot--selected': i === this.calculateButtonValue() % this.props.number },
             )}
             type="button"
             onClick={this.onChange(i)}
           >
             {i + 1}
           </div>
-        </li>
+        </li>,
       );
     }
     return dots;
   }
 
   render() {
+    const { className, rtl } = this.props;
     return (
-      <ul className="BrainhubCarousel__dots">
+      <ul className={classnames('BrainhubCarousel__dots', className, rtl ? 'BrainhubCarousel__dots--isRTL' : '')}>
         {this.renderCarouselDots()}
       </ul>
     );
   }
 }
+
+export default CarouselDots;

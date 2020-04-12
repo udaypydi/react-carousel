@@ -2,6 +2,17 @@
   overflow: hidden;
   display: flex;
   align-items: center;
+
+  &.BrainhubCarousel--isRTL {
+    direction: rtl;
+
+    .BrainhubCarousel__trackContainer {
+      .BrainhubCarousel__track {
+        direction: rtl;
+      }
+    }
+  }
+
   .BrainhubCarousel__trackContainer {
     overflow: hidden;
     .BrainhubCarousel__track {
@@ -16,6 +27,11 @@
       }
     }
   }
+}
+
+/* vertical carousel */
+.BrainhubCarousel--vertical {
+  transform: rotate(90deg);
 }
 
 /* arrows */

@@ -14,11 +14,27 @@ There are some great carousels (like slick) that do not have real React implemen
 ## Installation
 `npm i @brainhubeu/react-carousel`
 
+### Typescript
+`npm i @types/brainhubeu__react-carousel -D`
+
 ## Demo
 You can access a clickable demo with many examples and a live code editor [here](https://brainhubeu.github.io/react-carousel/).
 
-### Typescript
-`npm i @types/brainhubeu__react-carousel -D`
+## Roadmap
+[The GitHub issues list](https://github.com/brainhubeu/react-carousel/issues) is our roadmap.
+You're more than welcome to vote:
+- with 👍if you like a given feature request or you'd like a given bug to be fixed
+- with ❤️ if you love a given feature request or fixing a given bug is critical for you
+- with 👎if in your opinion, a given feature would create more damages than the value provided by it or you consider a given bug to be a feature
+
+We don't give any guarantee to fix even the most liked issues but 👍and ❤️ increase probability of fixing while 👎decreases the probability of fixing.
+
+You're also more than welcome to:
+- submit a feature request
+- report a bug
+- ask a question
+- comment an issue, discussing the details
+- open a PR, fixing a given issue
 
 ## Usage
 By default the component does not need anything except children to render simple carousel.
@@ -39,6 +55,32 @@ export default class MyCarousel extends Component {
     );
   }
 }
+```
+
+### CDN
+If you don't use any bundler like Webpack, you can add these scripts to your HTML file, `body` section:
+```html
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script crossorigin type="text/javascript" src="https://unpkg.com/@brainhubeu/react-carousel@1.10.62-cdn/lib/react-carousel.js"></script>
+```
+Make sure to use a version ending with `-cdn`.
+
+Then, you can use the following global variables:
+- `BrainhubeuReactCarousel`
+- `BrainhubeuReactCarouselDots`
+- `BrainhubeuReactCarouselItem`
+- `BrainhubeuReactCarouselWrapper`
+
+### SSR
+When using `@brainhubeu/react-carousel` with SSR (Server-side Rendering), we recommend [Next.js](https://github.com/zeit/next.js) as `@brainhubeu/react-carousel` currently doesn't work on the server side so it must be rendered on the client side (maybe we'll provide server-side working in the future).
+```js
+import dynamic from 'next/dynamic';
+
+const { default: Carousel, Dots } = dynamic(
+ () => require('@brainhubeu/react-carousel'),
+ { ssr: false },
+);
 ```
 
 ### Carousel as controlled element
@@ -182,6 +224,7 @@ render() {
       itemWidth={250}
       clickToChange
       centered
+      rtl
     >
       <img src={imageOne} />
       <img src={imageTwo} />
@@ -201,6 +244,7 @@ Where:
 * `itemWidth` (*number*) determines custom width for each slide in carousel
 * `clickToChange` *boolean* indicating if clicking on a slide should trigger changing the current value
 * `centered` *boolean* indicating if the current active slide should be aligned to the center or to the left of a carousel
+* `rtl` *boolean* indicating if the carousel should have direction from Right to Left (make sure to pass the `rtl` param to the `Dots` component as well)
 
 ### Infinite
 ```javascript
@@ -345,30 +389,79 @@ render() {
 }
 ```
 
+Navigation dots can also be further customized with your own styles.
+```javascript
+import Carousel, { Dots } from '@brainhubeu/react-carousel';
+import '@brainhubeu/react-carousel/lib/style.css';
+
+// ...
+
+constructor(props) {
+  super(props);
+  this.state = {
+    value: 0,
+  };
+}
+
+onChange = value => this.setState({ value });
+
+render() {
+  return (
+    <div>
+      <Carousel
+        value={this.state.value}
+        onChange={this.onChange}
+      >
+        <img className="img-example" src={someImage} />
+        ...
+        <img className="img-example" src={anotherImage} />
+      </Carousel>
+      <Dots value={this.state.value} onChange={this.onChange} number={12} className={yourOwnClassName} />
+    </div>
+  );
+}
+```
+
+### Carousel in vertical direction
+You can pass a `vertical` prop to rotate the carousel in a vertical direction. The default value for `vertical` is `false`.
+```javascript
+import Carousel from '@brainhubeu/react-carousel';
+import '@brainhubeu/react-carousel/lib/style.css';
+// ...
+render() {
+  return (
+    <div>
+      <Carousel
+        vertical
+      >
+        <img className="img-example" src={someImage} />
+      </Carousel>
+    </div>
+  );
+}
+```
+
 ## Unit tests
 ```
-npm run test-unit
+yarn test:unit
 ```
 
-## Regression tests
-
-Install selenium if it is not installed
-```
-npm run selenium-install
-```
+## E2E tests
 
 ```
-1. npm run selenium-start
-2. npm run example
-3. npm run test-regression
+yarn test:e2e
 ```
 
-## Roadmap
-*Under construction...*
+## Local running
+In order to run the docs/ demo locally:
+- `cd docs-www`
+- if you want to connect demo with the carousel source code, replace `__RC_ENV__` into `development` in https://github.com/brainhubeu/react-carousel/blob/master/docs-www/src/globalReferences.js#L2 and remove the `.babelrc` file in the root directory; otherwise, it will use the carousel code installed in `docs-www/node_modules`
+- `yarn develop`
+
 
 ## License
 
-react-carousel is copyright © 2014-2018 [Brainhub](https://brainhub.eu/) It is free software, and may be redistributed under the terms specified in the [license](LICENSE.md).
+react-carousel is copyright © 2018-2020 [Brainhub](https://brainhub.eu/?utm_source=github) It is free software, and may be redistributed under the terms specified in the [license](LICENSE.md).
 
 ## About
 

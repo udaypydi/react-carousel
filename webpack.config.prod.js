@@ -1,5 +1,7 @@
-const webpack = require('webpack');
 const path = require('path');
+
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -37,9 +39,10 @@ module.exports = {
     libraryTarget: 'umd',
     path: path.resolve(__dirname, 'lib'),
     umdNamedDefine: true,
+    globalObject: 'this',
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
+    new UglifyJsPlugin({
       sourceMap: false,
     }),
     new ExtractTextPlugin('style.css'),
